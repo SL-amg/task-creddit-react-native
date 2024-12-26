@@ -51,6 +51,9 @@ const PostsScreens = () => {
       deletePost={() =>{
         handleDelete(post?.id)
       }}
+      addAComment={() => {
+        navigation.navigate("AddNewComment", { postId: post.id });
+      }}
     />
   ));
 
@@ -62,7 +65,7 @@ const PostsScreens = () => {
     <ScrollView>
   <View>
     <Button
-        title="Go to Creat Post"
+        title="Create a New Post"
         onPress={() => navigation.navigate("Add Post")}
       />
     
