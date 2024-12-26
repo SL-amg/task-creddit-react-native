@@ -9,7 +9,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const PostCard = ( { id, title, description, handelPost, deletePost, addAComment }) => {
+const PostCard = ({
+  id,
+  title,
+  description,
+  handelPost,
+  deletePost,
+  addAComment,
+}) => {
   return (
     <View>
       <Text>The Post-ID is </Text>
@@ -19,13 +26,13 @@ const PostCard = ( { id, title, description, handelPost, deletePost, addAComment
       <Text>Description </Text>
       <Text>{description}</Text>
       <View>
-      <Button title="See Post Detail" onPress={handelPost} />
+        <Button title="See Post Detail" onPress={handelPost} />
       </View>
       <View>
-      <Button title="Delete a Post" onPress={deletePost} />
+        <Button title="Delete a Post" onPress={deletePost} />
       </View>
       <View>
-      <Button title="Add a Comment" onPress={addAComment} />
+        <Button title="Add a Comment" onPress={addAComment} />
       </View>
     </View>
   );

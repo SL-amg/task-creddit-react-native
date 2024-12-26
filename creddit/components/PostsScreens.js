@@ -12,13 +12,10 @@ import {
 import { deletePostById, getAllPosts } from "../api/post";
 import PostCard from "./PostCard";
 import { useNavigation } from "@react-navigation/native";
-import { useQuery, useMutation, } from "@tanstack/react-query";
-
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 const PostsScreens = () => {
-
-    const navigation = useNavigation();
-
+  const navigation = useNavigation();
 
   //to get all posts
   const { data, isFetching, isSuccess, refetch } = useQuery({
@@ -32,11 +29,13 @@ const PostsScreens = () => {
     mutationKey: ["deletePost"],
     mutationFn: (newPost) => deletePostById(newPost),
     onSucess: () => {
+      queryClient.invalidateQueries({queryKey: ['posts']});
       navigation.navigate("Post List");
-    }})
-    const handleDelete = (id) => {
-      deleteMutation.mutate(id);
-    };
+    },
+  });
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+  };
 
   const postViewList = data?.map((post) => (
     <PostCard
@@ -48,8 +47,8 @@ const PostsScreens = () => {
       handelPost={() => {
         navigation.navigate("PostDetail", { postId: post.id });
       }}
-      deletePost={() =>{
-        handleDelete(post?.id)
+      deletePost={() => {
+        handleDelete(post?.id);
       }}
       addAComment={() => {
         navigation.navigate("AddNewComment", { postId: post.id });
@@ -57,26 +56,18 @@ const PostsScreens = () => {
     />
   ));
 
-  console.log("data", data);
-
-
   return (
-  
     <ScrollView>
-  <View>
-    <Button
-        title="Create a New Post"
-        onPress={() => navigation.navigate("Add Post")}
-      />
-    
-    
-    {postViewList}</View>
+      <View>
+        <Button
+          title="Create a New Post"
+          onPress={() => navigation.navigate("Add Post")}
+        />
 
+        {postViewList}
+      </View>
     </ScrollView>
-
-
-);
-
+  );
 };
 
 export default PostsScreens;

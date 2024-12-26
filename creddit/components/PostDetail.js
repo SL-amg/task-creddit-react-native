@@ -1,25 +1,23 @@
 import {
-    Button,
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    SearchBar,
-    Image,
-    TouchableOpacity,
-  } from "react-native";
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  SearchBar,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { getOnePostById } from "../api/post";
 import { useQuery } from "@tanstack/react-query";
 
+const PostDetail = ({ route }) => {
+  const { postId } = route.params;
 
-const PostDetail = ({route}) => {
-    
-    const { postId } = route.params;
-
-    const { data } = useQuery({
-      queryKey: ["postDataId", postId],
-      queryFn: () => getOnePostById(postId),
-    });
+  const { data } = useQuery({
+    queryKey: ["postDataId", postId],
+    queryFn: () => getOnePostById(postId),
+  });
 
   return (
     <View>
@@ -29,8 +27,14 @@ const PostDetail = ({route}) => {
       <Text>{data?.title}</Text>
       <Text>Description </Text>
       <Text>{data?.description}</Text>
+      {data?.comments?.map((comment) => (
+        <View key={comment?.id}>
+          <Text>Username: {comment?.username}</Text>
+          <Text>Comment: {comment?.comment}</Text>
+        </View>
+      ))}
     </View>
   );
 };
 
-export default PostDetail
+export default PostDetail;

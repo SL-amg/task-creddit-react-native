@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 import { addNewPost } from "../api/post";
 import { useNavigation } from "@react-navigation/native";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const PostAdd = () => {
   const navigation = useNavigation();
@@ -23,32 +23,34 @@ const PostAdd = () => {
     mutationKey: ["createPost"],
     mutationFn: (newPost) => addNewPost(newPost),
     onSucess: () => {
+      alert("Post Cteated");
+      queryClient.invalidateQueries({queryKey: ['createPost']});
       navigation.navigate("Post List");
     },
   });
-  const handleSubmit=()=>{
-    console.log(title)
+  const handleSubmit = () => {
+    console.log(title);
     createMutation.mutate({
-      title ,
-      description ,
-    });}
+      title,
+      description,
+    });
+  };
 
   return (
     <View>
       <TextInput
         placeholder="Title"
         onChangeText={(e) => {
-            setTitle(e);
+          setTitle(e);
         }}
       />
       <TextInput
         placeholder="Description"
         onChangeText={(e) => {
-            setDescription(e);
+          setDescription(e);
         }}
       />
-      <Button title="submit" onPress={handleSubmit}/>
-
+      <Button title="submit" onPress={handleSubmit} />
     </View>
   );
 };

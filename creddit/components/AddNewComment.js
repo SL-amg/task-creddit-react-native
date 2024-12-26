@@ -1,63 +1,58 @@
 import {
-    Button,
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    SearchBar,
-    Image,
-    TouchableOpacity,
-  } from "react-native";
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  SearchBar,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { addNewCommentToPostById } from "../api/comment";
 import { useNavigation } from "@react-navigation/native";
-import { useMutation, useQueryClient} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-const AddNewComment = ({route}) => {
+const AddNewComment = ({ route }) => {
+  const navigation = useNavigation();
 
-    const navigation = useNavigation();
+  const [username, setUsername] = useState("");
+  const [comment, setComment] = useState("");
 
-    const [username, setUsername] = useState("");
-    const [comment, setComment] = useState("");
+  const { postId } = route.params;
 
-    const queryClient = useQueryClient();
+  const createCommentMutation = useMutation({
+    mutationKey: ["comments", postId],
+    mutationFn: (data) => addNewCommentToPostById(postId, data),
+    onSucess: () => {
+      alert("OK!");
+    },
+  });
 
-    const { postId } = route.params;
-
-    const createCommentMutation = useMutation({
-        mutationKey: ["createComment", postId],
-        mutationFn: (newComment) => addNewCommentToPostById(postId, newComment),
-        onSucess: () => {
-            alert("Comment created!");
-            navigation.navigate("Post List");
-          },
-        });
-
-        const handleCommentSubmit=()=>{
-            createCommentMutation.mutate({
-              username ,
-              comment ,
-            });}
-
+  const handleCommentSubmit = () => {
+    createCommentMutation.mutate({
+      username,
+      comment,
+    });
+  };
 
   return (
-<View>
+    <View>
       <TextInput
         placeholder="user Name"
-        onChangeText={(e) => {
-            setUsername(e);
-        }}
+        value={username}
+        onChangeText={setUsername}
       />
+
       <TextInput
         placeholder="Comment"
-        onChangeText={(e) => {
-            setComment(e);
-        }}
+        value={comment}
+        onChangeText={setComment}
       />
-      <Button title="submit" onPress={handleCommentSubmit}/>
 
+      <Button title="submit" onPress={handleCommentSubmit} />
     </View>
-  )
-}
+  );
+};
 
-export default AddNewComment
+export default AddNewComment;
