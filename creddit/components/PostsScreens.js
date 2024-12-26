@@ -7,11 +7,13 @@ import {
   SearchBar,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { getAllPosts } from "../api/post";
-import { useQuery } from "@tanstack/react-query";
+import { deletePostById, getAllPosts } from "../api/post";
 import PostCard from "./PostCard";
 import { useNavigation } from "@react-navigation/native";
+import { useQuery, useMutation, } from "@tanstack/react-query";
+
 
 const PostsScreens = () => {
 
@@ -25,6 +27,17 @@ const PostsScreens = () => {
     enabled: true,
   });
 
+  //to delete a post
+  const deleteMutation = useMutation({
+    mutationKey: ["deletePost"],
+    mutationFn: (newPost) => deletePostById(newPost),
+    onSucess: () => {
+      navigation.navigate("Post List");
+    }})
+    const handleDelete = (id) => {
+      deleteMutation.mutate(id);
+    };
+
   const postViewList = data?.map((post) => (
     <PostCard
       post={post}
@@ -32,6 +45,12 @@ const PostsScreens = () => {
       id={post?.id}
       title={post?.title}
       description={post?.description}
+      handelPost={() => {
+        navigation.navigate("PostDetail", { postId: post.id });
+      }}
+      deletePost={() =>{
+        handleDelete(post?.id)
+      }}
     />
   ));
 
@@ -40,6 +59,7 @@ const PostsScreens = () => {
 
   return (
   
+    <ScrollView>
   <View>
     <Button
         title="Go to Creat Post"
@@ -48,6 +68,9 @@ const PostsScreens = () => {
     
     
     {postViewList}</View>
+
+    </ScrollView>
+
 
 );
 
